@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>:: Shortly ::</title>
+        <meta charset="utf-8"/>
+	<link rel="stylesheet" type="text/css" href="static/css/delete.css" />
+</head>
+
+<body>
+	
+	<p>{{ delmsg }}</p>
+	<form name="delete" id="delete" method="POST">
+		<label>Enter the shorten word to delete:</label>
+		<input type="text" name="de" id="de" style="width:240px;" />
+		<button type="submit" id="button">Delete</button>
+	</form><br/><br/>
+	<table border="1">
+		<tr>
+			<th>short</th>
+			<th>count</th>
+			<th>origin</th>
+		</tr>
+		{% for x in li %}
+		<tr>
+			<td><a href="http://people.ischool.berkeley.edu/~katehsiao/server/{{x[0]}}" target="_blank">{{ x[0] }}</a></td>
+			<td>{{ x[1] }}</td>
+			<td>{{ x[2] }}</td>
+		</tr>
+		{% endfor %}
+
+	</table>
+</body>
+
+</html>

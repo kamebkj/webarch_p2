@@ -1,0 +1,98 @@
+
+body{
+	font-family:'Helvetica';
+	font-size:12px;
+	background-color:#F9E3CB;
+	color:#88382D;
+}
+
+
+input {
+	font-size:12px;
+	height:20px;
+	width: 250px;
+	border-radius:3px;
+	text-align:center;
+}
+
+a {
+	color:#AD7460;
+}
+
+label#warnmsg {
+	font-size:12px;
+	color:#A84A5C;
+	text-align:right;
+}
+
+#button {
+	border-radius:5px;
+	display:block;
+	margin: 20px auto;
+	width:120px;
+	height:30px;
+	background-color:#F9D654;
+}
+
+.top-container {
+        margin: auto;
+        width: 80%;
+}
+
+.fluid-grid {
+        margin: auto;
+        width: 80%;
+}
+
+.grid {
+        float: left;
+        margin: auto;
+	width: 100%;
+}
+
+
+@media (min-width: 480px) and (max-width: 800px)  {
+
+        .top-container {
+                margin: auto;
+                width: 60%;
+        }
+
+        .fluid-grid {
+                margin: auto;
+                width: 80%;
+        }
+
+	.grid {
+                float: left;
+                margin: auto;
+                width: 50%;
+        }
+        .grid#g3 {
+                /*float: left;*/
+                margin: auto;
+                width: 100%;
+        }
+
+}
+
+@media (min-width: 800px) {
+
+	.top-container {
+		margin: auto;
+		width: 40%;
+	}
+
+	.fluid-grid {
+		margin: auto;
+		width: 80%;
+	}
+
+	.grid {	
+		float: left;
+		margin: auto;
+		width: 33%;
+	}
+}
+
+

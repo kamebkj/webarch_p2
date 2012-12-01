@@ -1,0 +1,53 @@
+/* CSS Document */
+
+/*main body content*/
+
+body{
+	font-family:'Helvetica';
+	font-size:22px;
+	background-color:#D83055;
+	color:#000;
+	font-weight:200;
+	margin-left: 100px;
+}
+
+
+input {
+	font-size:16px;
+	height:30px;
+	border-radius:5px;
+	text-align:center;
+}
+
+form {
+	margin-left:100px;
+}
+
+table {
+	color:#FFF;
+	margin-left:10px;
+}
+
+
+p {
+	color:#FFF;
+	font-size:14px;
+	margin-left:420px;
+}
+
+a {
+	color:#E6E6E6;
+}
+
+#button {
+	border-radius:5px;
+	margin-left:10px;
+	width:120px;
+	height:30px;
+	background-color:#E6E6E6;
+}
+
+#button:hover {
+	background-color: #EFEFEF;
+}
+

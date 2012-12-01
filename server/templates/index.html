@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<title>:: Shortly ::</title>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="static/css/shortly.css" />
+	<!--
+	<link rel="stylesheet" type="text/css" href="static/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="static/css/bootstrap-responsive.css" />
+	-->
+</head>
+<body>
+	<!--
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container">
+				<a class="btn btn-navbar collapsed" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				</a>
+          			<a class="brand">Kate Hsiao</a>
+				<div class="nav-collapse collapse" style="height: 0px;">
+					<ul class="nav">
+						<li class="active"><a href="#shome">Home</a></li>
+						<li class=""><a href="#sproject">Project</a></li>
+						<li class=""><a href="#scontact">Contact</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	-->
+	<div class="top-container">
+		<!--
+		<div style="margin-top:10px; margin-left:100px;"><img src="img/logo.png" alt=""/></div>
+		-->
+		<form name="input" id="input" action="http://people.ischool.berkeley.edu/~katehsiao/server/create" method="POST">
+		<label>&nbsp;&nbsp;&nbsp;Paste your long URL:</label>
+		<input type="text" name="origin" id="origin" placeholder="Long URL"/><br/>
+		<br/>
+		<label>Custom alias (optional):</label>
+		<input type="text" name="custom" id="custom" placeholder="Short Alias"/>
+			<label id="warnmsg"> </label>
+		<button type="submit" id="button">Go!</button>
+	</form>
+		<!--
+		<div><img src="img/line2.png" alt=""/></div>
+		-->
+	</div>
+
+	<div class="fluid-grid">
+		<div class="grid" id="g1">
+			<p><a href="listurl" target="_blank">See Link List</a>
+			Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+			{% if afterurl %}
+			<p> {{ duplicate_msg }} </p>
+			<p>Your origin URL is:</p>
+			<p>{{ originurl }}</p>
+		
+			<p>Here's your shorten URL:</p>
+			<a href="{{ afterurl }}" target="_blank"><p>{{ afterurl }}</a><br/><br/>
+		
+			{% endif %}
+		</div>
+		<div class="grid" id="g2">
+			<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+		</div>
+		<div class="grid" id="g3">
+			<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+		</div>
+	</div>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script type="text/javascript" src="static/js/validate.js"></script>
+<script type="text/javascript" src="static/js/touch.js"></script>
+<!--
+<script type="text/javascript" src="static/js/bootstrap.js"></script>
+-->
+</body>
+</html>
