@@ -7,6 +7,9 @@ from subprocess import check_output
 import flask
 from flask import request
 from os import environ
+import os
+import Cookie
+import datetime
 
 app = flask.Flask(__name__)
 app.debug = True
@@ -14,6 +17,7 @@ app.debug = True
 
 dbS = shelve.open("shorten.db")
 dbC = shelve.open("count.db")
+dbCookie = shelve.open("cookie.db")
 
 #@app.route('/')
 #def index():
@@ -102,12 +106,19 @@ def img(filename):
 ##/
 @app.route("/", methods=['GET'])
 def inputpage():
-    return flask.render_template(
-	'index.html')
+    app.logger.debug( dbCookie.keys() )
+
+    if not checkCookie():
+	#app.logger.debug("home-cookieNotSet")
+	response = flask.make_response(flask.render_template('index.html'))
+	response.headers['Set-Cookie'] = setCookie()
+        return response
+    else:
+	#app.logger.debug("home-cookieSet")
+	return flask.render_template('index.html')
 
 @app.route("/create", methods=['PUT', 'POST'])
 def create():
-    #app.logger.debug(dbS.keys())
     #"""Create an association of =short= with the POST arguement =url="""
     origin = request.form.get('origin','DEFAULT')
     custom = request.form.get('custom','DEFAULT')
@@ -119,11 +130,7 @@ def create():
 
     duplicate_msg = ""
     originurl = origin
-
-    #origin = origin.encode('utf-8')
     custom = custom.encode('utf-8')
-
-    #app.logger.debug(origin)
 
     # if the same url is entered
     for v in dbS.keys():
@@ -147,12 +154,23 @@ def create():
     #save to db
     dbS[custom] = origin
     dbC[custom] = 0
-    return flask.render_template(
-	'index.html',
-	afterurl = "http://people.ischool.berkeley.edu/~katehsiao/server/" + custom,
-	duplicate_msg = duplicate_msg,
-	originurl = originurl ) 
     
+    if not checkCookie():
+	#app.logger.debug("create-cookieNotSet")
+        response = flask.make_response(flask.render_template(
+        'index.html',
+        afterurl = "http://people.ischool.berkeley.edu/~katehsiao/server/" + custom,
+        duplicate_msg = duplicate_msg,
+        originurl = originurl ))
+        response.headers['Set-Cookie'] = setCookie()
+        return response
+    else:
+	#app.logger.debug("create-cookieSet")
+        return flask.render_template(
+        'index.html',
+        afterurl = "http://people.ischool.berkeley.edu/~katehsiao/server/" + custom,
+        duplicate_msg = duplicate_msg,
+        originurl = originurl )
 
 
 @app.route("/<short>", methods=['GET'])
@@ -163,9 +181,21 @@ def redirect(short):
     if dbS.has_key(short) :
 	destination = dbS.get(short,'/')
 	dbC[short] = str( int(dbC[short]) + 1 )
-	return flask.redirect(destination)
+
+	if not checkCookie():
+	    app.logger.debug("redirect-cookieNotSet")
+            response = flask.make_response(flask.redirect(destination))
+            response.headers['Set-Cookie'] = setCookie()
+            return response
+        else:
+            app.logger.debug("redirect-cookieSet")
+            return flask.redirect(destination)
     else:
 	return "404 Not Found"
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return "404040404 Not Found"
 
 #@app.route("/<short>", methods=['DELETE'])
 @app.route("/listurl", methods=['POST'])
@@ -206,6 +236,39 @@ def listurl():
         'listurl.html',
 	li = li,
 	delmsg = "" )
+
+#-----------------------------------------
+
+def setCookie():
+    expiration = datetime.datetime.now() + datetime.timedelta(days=30)
+    cookie = Cookie.SimpleCookie()
+
+    # Check if sessionId already exists in database
+    tempKey= str(random.randint(0,10000))
+    while dbCookie.has_key(tempKey):
+	tempKey = str(random.randint(0,10000))
+    
+    cookie["session"] = tempKey
+    #cookie["session"]["domain"] = ".people.ischool.berkeley.edu/~katehsiao/server/"
+    #cookie["session"]["path"] = "/"
+    cookie["session"]["expires"] = expiration.strftime("%a, %d-%b-%Y %H:%M:%S PST")
+
+    dbCookie[tempKey] = cookie["session"]["expires"]
+
+    #print "Set cookie with: " + cookie.output()
+    return cookie.output()[12:]
+
+def checkCookie():
+    header = flask.request.headers
+    #print header['Cookie']    
+    try:
+	cookie = Cookie.SimpleCookie(header['Cookie'])
+	print "session = " + cookie["session"].value
+	return True
+    except(Cookie.CookieError, KeyError):
+	print "Session cookie not set!"
+	return False
+
 
 
 if __name__ == "__main__":
