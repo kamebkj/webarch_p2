@@ -5,3 +5,5 @@ venv/
 #*
 /server/shorten.db
 /server/count.db
+/server/cookie.db
+/server/logfile

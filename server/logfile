@@ -1,3 +1,0 @@
-{"action": "load homepage", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11", "id": "5431", "datetime": "Sun, 02-Dec-2012 16:02:14 PST"}
-{"short": "twt", "long": "https://twitter.com/", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11", "action": "save URL", "datetime": "Sun, 02-Dec-2012 16:02:32 PST", "id": "5431"}
-{"short": "twt", "long": "https://twitter.com/", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_5) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11", "action": "redirect", "datetime": "Sun, 02-Dec-2012 16:02:34 PST", "id": "5431"}
