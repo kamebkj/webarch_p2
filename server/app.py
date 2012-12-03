@@ -10,6 +10,7 @@ from os import environ
 import os
 import Cookie
 import datetime
+import json
 
 app = flask.Flask(__name__)
 app.debug = True
@@ -18,17 +19,7 @@ app.debug = True
 dbS = shelve.open("shorten.db")
 dbC = shelve.open("count.db")
 dbCookie = shelve.open("cookie.db")
-
-#@app.route('/')
-#def index():
-#    """Builds a template based on a GET request, with some default
-#    arguements"""
-#    index_title = request.args.get("title", "i253")
-#    hello_name = request.args.get("name", "Jim")
-#    return flask.render_template(
-#            'index.html',
-#            title=index_title,
-#            name=hello_name)
+#logfile = open("logfile","a")
 
 
 @app.route('/static/js/<filename>')
@@ -47,55 +38,6 @@ def css(filename):
 def img(filename):
     return flask.send_file(filename, mimetype='image/png')
 
-###
-# This function is not working properly because the Content-Type is not set.
-# Set the correct MIME type to be able to view the image in your browser
-##/
-
-###
-#@app.route('/image')
-#def image():
-#    """Returns a PNG image of madlibs text"""
-#    relationship = request.args.get("relationship", "friend")
-#    name = request.args.get("name", "Jim")
-#    adjective = request.args.get("adjective", "fun")
-
-#    resp = flask.make_response(
-#            check_output(['convert', '-size', '600x400', 'xc:transparent',
-#                '-font', '/usr/share/fonts/thai-scalable/Waree-BoldOblique.ttf',
-#                '-fill', 'black', '-pointsize', '32', '-draw',
-#                "text 10,30 'My %s %s said i253 was %s'" % (relationship, name, adjective),
-#                'png:-']), 200);
-#    # Comment in to set header below
-#    resp.headers['Content-Type'] = 'image/png'
-#    
-#    #
-#    hrs = flask.request.headers
-#    if hrs['Accept'].find('text/html')!= -1 or hrs['Accept'].find('image/png')!= -1 :
-#        return resp
-#    else:
-#	return "My %s %s said this can only return text. :) " % (relationship, name)
-###
-
-###
-# Below is an example of a shortened URL
-# We can set where /wiki redirects to with a PUT or POST command
-# and when we GET /wiki it will redirect to the specified Location
-##/
-
-###
-#@app.route("/wiki", methods=['PUT', 'POST'])
-#def install_wiki_redirect():
-#    wikipedia = request.form.get('url', "http://en.wikipedia.org")
-#    db['wiki'] = wikipedia
-#    return "Stored wiki => " + wikipedia
-
-#@app.route("/wiki", methods=["GET"])
-#def redirect_wiki():
-#    destination = db.get('wiki', '/')
-#    app.logger.debug("Redirecting to " + destination)
-#    return flask.redirect(destination)
-
 
 ###
 # Now we'd like to do this generally:
@@ -106,16 +48,34 @@ def img(filename):
 ##/
 @app.route("/", methods=['GET'])
 def inputpage():
-    app.logger.debug( dbCookie.keys() )
+    #app.logger.debug( dbCookie.keys() )
 
-    if not checkCookie():
-	#app.logger.debug("home-cookieNotSet")
+    cookieId = checkCookie()
+    if cookieId == "":
+	#app.logger.debug("home-cookieNotSet"+cookieId)
+	Ary = setCookie()
+
 	response = flask.make_response(flask.render_template('index.html'))
-	response.headers['Set-Cookie'] = setCookie()
+	response.headers['Set-Cookie'] = Ary[1]
+	currentTime = datetime.datetime.now().strftime("%a, %d-%b-%Y %H:%M:%S PST")
+	userAgent = flask.request.headers["User-Agent"]
+
+	logline = json.dumps({'id':Ary[0], 'datetime':currentTime, 'action':'load', 'user-agent':userAgent})
+	logfile = open("logfile","a")
+	logfile.write(logline+"\n")
+	logfile.close()
         return response
     else:
-	#app.logger.debug("home-cookieSet")
+	#app.logger.debug("home-cookieSet"+cookieId)
+	currentTime = datetime.datetime.now().strftime("%a, %d-%b-%Y %H:%M:%S PST")
+	userAgent = flask.request.headers["User-Agent"]
+
+	logline = json.dumps({'id':cookieId, 'datetime':currentTime, 'action':'load homepage', 'user-agent':userAgent})
+        logfile = open("logfile","a")
+	logfile.write(logline+"\n")
+	logfile.close()
 	return flask.render_template('index.html')
+
 
 @app.route("/create", methods=['PUT', 'POST'])
 def create():
@@ -155,22 +115,43 @@ def create():
     dbS[custom] = origin
     dbC[custom] = 0
     
-    if not checkCookie():
-	#app.logger.debug("create-cookieNotSet")
-        response = flask.make_response(flask.render_template(
+    # check cookieId
+    cookieId = checkCookie()
+    if cookieId == "":
+        #app.logger.debug("create-cookieNotSet"+cookieId)
+        Ary = setCookie()
+
+	response = flask.make_response(flask.render_template(
         'index.html',
         afterurl = "http://people.ischool.berkeley.edu/~katehsiao/server/" + custom,
         duplicate_msg = duplicate_msg,
         originurl = originurl ))
-        response.headers['Set-Cookie'] = setCookie()
+        response.headers['Set-Cookie'] = Ary[1]
+        currentTime = datetime.datetime.now().strftime("%a, %d-%b-%Y %H:%M:%S PST")
+	userAgent = flask.request.headers["User-Agent"]
+
+        logline = json.dumps({'id':Ary[0], 'datetime':currentTime, 'action':'save URL', 'user-agent':userAgent, 'short':custom, 'long':origin})
+        logfile = open("logfile","a")
+        logfile.write(logline+"\n")
+        logfile.close()
+
         return response
     else:
-	#app.logger.debug("create-cookieSet")
-        return flask.render_template(
+        #app.logger.debug("create-cookieSet"+cookieId)
+        currentTime = datetime.datetime.now().strftime("%a, %d-%b-%Y %H:%M:%S PST")
+	userAgent = flask.request.headers["User-Agent"]
+
+        logline = json.dumps({'id':cookieId, 'datetime':currentTime, 'action':'save URL', 'user-agent':userAgent, 'short':custom, 'long':origin})
+        logfile = open("logfile","a")
+        logfile.write(logline+"\n")
+        logfile.close()
+
+	return flask.render_template(
         'index.html',
         afterurl = "http://people.ischool.berkeley.edu/~katehsiao/server/" + custom,
         duplicate_msg = duplicate_msg,
         originurl = originurl )
+
 
 
 @app.route("/<short>", methods=['GET'])
@@ -182,20 +163,38 @@ def redirect(short):
 	destination = dbS.get(short,'/')
 	dbC[short] = str( int(dbC[short]) + 1 )
 
-	if not checkCookie():
-	    app.logger.debug("redirect-cookieNotSet")
-            response = flask.make_response(flask.redirect(destination))
-            response.headers['Set-Cookie'] = setCookie()
+	cookieId = checkCookie()
+	if cookieId == "":
+            #app.logger.debug("redirect-cookieNotSet"+cookieId)
+            Ary = setCookie()
+	    
+	    response = flask.make_response(flask.redirect(destination))
+            response.headers['Set-Cookie'] = Ary[1]
+            currentTime = datetime.datetime.now().strftime("%a, %d-%b-%Y %H:%M:%S PST")
+	    userAgent = flask.request.headers["User-Agent"]
+
+            logline = json.dumps({'id':Ary[0], 'datetime':currentTime, 'action':'redirect', 'user-agent':userAgent, 'short':short, 'long':destination})
+            logfile = open("logfile","a")
+            logfile.write(logline+"\n")
+            logfile.close()
             return response
         else:
-            app.logger.debug("redirect-cookieSet")
-            return flask.redirect(destination)
+            #app.logger.debug("redirect-cookieSet"+cookieId)
+            currentTime = datetime.datetime.now().strftime("%a, %d-%b-%Y %H:%M:%S PST")
+	    userAgent = flask.request.headers["User-Agent"]
+
+            logline = json.dumps({'id':cookieId, 'datetime':currentTime, 'action':'redirect', 'user-agent':userAgent, 'short':short,'long':destination})
+            logfile = open("logfile","a")
+            logfile.write(logline+"\n")
+            logfile.close()
+	    return flask.redirect(destination)
+
     else:
 	return "404 Not Found"
 
 @app.errorhandler(404)
 def page_not_found(error):
-    return "404040404 Not Found"
+    return "404 Not Found"
 
 #@app.route("/<short>", methods=['DELETE'])
 @app.route("/listurl", methods=['POST'])
@@ -240,13 +239,14 @@ def listurl():
 #-----------------------------------------
 
 def setCookie():
+    # Set the cookie exiration time = 30 days
     expiration = datetime.datetime.now() + datetime.timedelta(days=30)
     cookie = Cookie.SimpleCookie()
 
     # Check if sessionId already exists in database
-    tempKey= str(random.randint(0,10000))
+    tempKey = str(random.randint(0,10000000))
     while dbCookie.has_key(tempKey):
-	tempKey = str(random.randint(0,10000))
+	tempKey = str(random.randint(0,10000000))
     
     cookie["session"] = tempKey
     #cookie["session"]["domain"] = ".people.ischool.berkeley.edu/~katehsiao/server/"
@@ -256,18 +256,21 @@ def setCookie():
     dbCookie[tempKey] = cookie["session"]["expires"]
 
     #print "Set cookie with: " + cookie.output()
-    return cookie.output()[12:]
+    # Ary[0]: tempKey
+    # Ary[1]: cookie.output()[12:]
+    Ary = [ tempKey, cookie.output()[12:] ]
+    return Ary
 
 def checkCookie():
     header = flask.request.headers
-    #print header['Cookie']    
+    
     try:
 	cookie = Cookie.SimpleCookie(header['Cookie'])
 	print "session = " + cookie["session"].value
-	return True
+	return cookie["session"].value
     except(Cookie.CookieError, KeyError):
 	print "Session cookie not set!"
-	return False
+	return ""
 
 
 
