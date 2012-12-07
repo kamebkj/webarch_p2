@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+        <title>:: Shortly K ::</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!--
+                Use Bootstrap to beautify NavBar design
+                It uses @media to implement the responsive look
+        -->
+        <link rel="stylesheet" type="text/css" href="http://people.ischool.berkeley.edu/~chan/server/static/css/bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="http://people.ischool.berkeley.edu/~chan/server/static/css/bootstrap-responsive.css" />
+        <!--
+                Use my own css to acheive the column responsive
+                Also use @media to implement
+        -->
+	<link rel="stylesheet" type="text/css" href="http://people.ischool.berkeley.edu/~chan/server/static/css/shortly.css" />
+</head>
+
+<body>
+
+	<div class="navbar navbar-inverse navbar-fixed-top">
+                <div class="navbar-inner">
+                        <div class="container">
+                                <a class="btn btn-navbar collapsed" data-toggle="collapse" data-target=".nav-collapse">
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                </a>
+                                <a class="brand">Shortly K.</a>
+                                <div class="nav-collapse collapse" style="height: 0px;">
+                                        <ul class="nav">
+						<li class="active"><a href="http://people.ischool.berkeley.edu/~katehsiao/server/">Home</a></li>
+						<li class=""><a href="listurl">List</a></li>
+						<li class=""><a href="analyze">Analyze</a></li>
+                                        </ul>
+                                </div>
+                        </div>
+                </div>
+        </div>
+	<div style="margin-top:50px;"></div>
+	<div class="top-container">
+		<p>{{ delmsg }}</p>
+		<table border="1">
+			<tr>
+				<th>user-agent</th>
+				<th>count</th>
+			</tr>
+			{% for x in li %}
+			<tr>
+				<td>{{ x[0] }}</td>
+				<td>{{ x[1] }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+	</div>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://people.ischool.berkeley.edu/~chan/server/static/js/bootstrap.js"></script>
+</body>
+
+</html>

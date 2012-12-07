@@ -11,6 +11,7 @@ import os
 import Cookie
 import datetime
 import json
+import subprocess
 
 app = flask.Flask(__name__)
 app.debug = True
@@ -272,7 +273,36 @@ def checkCookie():
 	print "Session cookie not set!"
 	return ""
 
+#--------------------------------------------------------
+def execute(cmd):
+	devnull = open('/dev/null', 'w')
+	fd = subprocess.Popen(cmd,
+				stdout=subprocess.PIPE,
+				stderr=devnull)
+	while True:
+		retcode = fd.poll() #returns None while subprocess is running
+		line = fd.stdout.readline()
+		yield line
+		if(retcode is not None):
+			break
+	
 
+@app.route("/analyze", methods=['GET'])
+def analyze():
+	p_file = "top_browser.py"
+	command_line = ["python",p_file,"logfile"]
+	li =[]
+	#execute(command_line)
+	for line in execute(command_line):
+		if line != "":  #not empty then store it
+			item, count = line.split('\t')
+			#log(item,count)
+			li.append((item,count))
+#		print item, count
+	return flask.render_template(
+        'analyze.html',
+	li = li,
+	delmsg = "" )
 
 if __name__ == "__main__":
     app.run(port=int(environ['FLASK_PORT']))
