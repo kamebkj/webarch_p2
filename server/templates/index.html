@@ -2,17 +2,24 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-	<title>:: Shortly ::</title>
+	<title>:: Shortly K ::</title>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<link rel="stylesheet" type="text/css" href="static/css/shortly.css" />
 	<!--
+		Use Bootstrap to beautify NavBar design
+		It uses @media to implement the responsive look
+	-->
 	<link rel="stylesheet" type="text/css" href="static/css/bootstrap.css" />
 	<link rel="stylesheet" type="text/css" href="static/css/bootstrap-responsive.css" />
+	<!--
+		Use my own css to acheive the column responsive
+		Also tse @media to implement
 	-->
+        <link rel="stylesheet" type="text/css" href="static/css/shortly.css" />
+
 </head>
 <body>
-	<!--
+	
 	<div class="navbar navbar-inverse navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container">
@@ -21,22 +28,22 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 				</a>
-          			<a class="brand">Kate Hsiao</a>
+          			<a class="brand">Shortly K.</a>
 				<div class="nav-collapse collapse" style="height: 0px;">
 					<ul class="nav">
-						<li class="active"><a href="#shome">Home</a></li>
-						<li class=""><a href="#sproject">Project</a></li>
-						<li class=""><a href="#scontact">Contact</a></li>
+						<li class="active"><a href="http://people.ischool.berkeley.edu/~katehsiao/server/">Home</a></li>
+						<li class=""><a href="listurl">List</a></li>
+						<li class=""><a href="analyze">Analyze</a></li>
 					</ul>
 				</div>
 			</div>
 		</div>
 	</div>
-	-->
+	
 	<div class="top-container">
-		<!--
-		<div style="margin-top:10px; margin-left:100px;"><img src="img/logo.png" alt=""/></div>
-		-->
+		
+		<div style="margin-top:50px;"></div>
+		
 		<form name="input" id="input" action="http://people.ischool.berkeley.edu/~katehsiao/server/create" method="POST">
 		<label>&nbsp;&nbsp;&nbsp;Paste your long URL:</label>
 		<input type="text" name="origin" id="origin" placeholder="Long URL"/><br/>
@@ -49,35 +56,36 @@
 		<!--
 		<div><img src="img/line2.png" alt=""/></div>
 		-->
+		{% if afterurl %}
+                <p> {{ duplicate_msg }} </p>
+                <p>Your origin URL is:</p>
+                <p>{{ originurl }}</p>
+                
+                <p>Here's your shorten URL:</p>
+                <a href="{{ afterurl }}" target="_blank"><p>{{ afterurl }}</a><br/><br/>
+                
+                {% endif %}
 	</div>
 
 	<div class="fluid-grid">
 		<div class="grid" id="g1">
-			<p><a href="listurl" target="_blank">See Link List</a>
-			Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
-			{% if afterurl %}
-			<p> {{ duplicate_msg }} </p>
-			<p>Your origin URL is:</p>
-			<p>{{ originurl }}</p>
-		
-			<p>Here's your shorten URL:</p>
-			<a href="{{ afterurl }}" target="_blank"><p>{{ afterurl }}</a><br/><br/>
-		
-			{% endif %}
+			<p style="font-size:32px">Hello!</p>
+			<p>Shortly K. is a URL shortening service that helps you blah blah blah. Feel free to explore it. Feedback will be appreciated.</p>
 		</div>
 		<div class="grid" id="g2">
-			<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+			<p style="font-size:32px">Responsive</p>
+                        <p>Shortly K. was made to not only look and behave great in the latest desktop browsers, but in tablet and smartphone browsers via responsive CSS as well </p>
 		</div>
 		<div class="grid" id="g3">
-			<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.</p>
+			<p style="font-size:32px">Nah</p>
+                        <p>Click on the List on the top navigation bar to see the statistic for each shortening url. Analyze to see the more fun stuff.</p>
 		</div>
 	</div>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script type="text/javascript" src="static/js/validate.js"></script>
 <script type="text/javascript" src="static/js/touch.js"></script>
-<!--
 <script type="text/javascript" src="static/js/bootstrap.js"></script>
--->
+
 </body>
 </html>
