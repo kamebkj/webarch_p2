@@ -9,13 +9,13 @@
                 Use Bootstrap to beautify NavBar design
                 It uses @media to implement the responsive look
         -->
-        <link rel="stylesheet" type="text/css" href="http://people.ischool.berkeley.edu/~chan/server/static/css/bootstrap.css" />
-        <link rel="stylesheet" type="text/css" href="http://people.ischool.berkeley.edu/~chan/server/static/css/bootstrap-responsive.css" />
+        <link rel="stylesheet" type="text/css" href="static/css/bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="static/css/bootstrap-responsive.css" />
         <!--
                 Use my own css to acheive the column responsive
                 Also use @media to implement
         -->
-	<link rel="stylesheet" type="text/css" href="http://people.ischool.berkeley.edu/~chan/server/static/css/shortly.css" />
+	<link rel="stylesheet" type="text/css" href="static/css/shortly.css" />
 </head>
 
 <body>
@@ -42,6 +42,7 @@
 	<div style="margin-top:50px;"></div>
 	<div class="top-container">
 		<p>{{ delmsg }}</p>
+		<p>Counts per browser<p>
 		<table border="1">
 			<tr>
 				<th>user-agent</th>
@@ -54,9 +55,51 @@
 			</tr>
 			{% endfor %}
 		</table>
+		<br><br>
+		<p>Top followed URL<p>
+		<table border="1">
+			<tr>
+				<th>followed url</th>
+				<th>count</th>
+			</tr>
+			{% for x in li2 %}
+			<tr>
+				<td>{{ x[0] }}</td>
+				<td>{{ x[1] }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+		<br><br>
+		<p>Counts per session<p>
+		<table border="1">
+			<tr>
+				<th>session id</th>
+				<th>count</th>
+			</tr>
+			{% for x in li3 %}
+			<tr>
+				<td>{{ x[0] }}</td>
+				<td>{{ x[1] }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+		<br><br>
+		<p>Trending url within a day<p>
+		<table border="1">
+			<tr>
+				<th>Trending url</th>
+				<th>count</th>
+			</tr>
+			{% for x in li4 %}
+			<tr>
+				<td>{{ x[0] }}</td>
+				<td>{{ x[1] }}</td>
+			</tr>
+			{% endfor %}
+		</table>
 	</div>
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-	<script type="text/javascript" src="http://people.ischool.berkeley.edu/~chan/server/static/js/bootstrap.js"></script>
+	<script type="text/javascript" src="static/js/bootstrap.js"></script>
 </body>
 
 </html>

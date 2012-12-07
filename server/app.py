@@ -12,6 +12,7 @@ import Cookie
 import datetime
 import json
 import subprocess
+from operator import itemgetter
 
 app = flask.Flask(__name__)
 app.debug = True
@@ -286,23 +287,51 @@ def execute(cmd):
 		if(retcode is not None):
 			break
 	
-
 @app.route("/analyze", methods=['GET'])
 def analyze():
 	p_file = "top_browser.py"
 	command_line = ["python",p_file,"logfile"]
 	li =[]
-	#execute(command_line)
 	for line in execute(command_line):
 		if line != "":  #not empty then store it
 			item, count = line.split('\t')
-			#log(item,count)
-			li.append((item,count))
-#		print item, count
+			li.append((item,int(count)))
+		
+	p_file = "top_followed_url.py"
+	command_line = ["python",p_file,"logfile"]
+	li2 =[]
+	for line in execute(command_line):
+		if line != "":  #not empty then store it
+			item, count = line.split('\t')
+			li2.append((item,int(count)))
+
+	p_file = "top_session.py"
+	command_line = ["python",p_file,"logfile"]
+	li3 =[]
+	for line in execute(command_line):
+		if line != "":  #not empty then store it
+			item, count = line.split('\t')
+			li3.append((item,int(count)))
+
+	p_file = "top_trending.py"
+	command_line = ["python",p_file,"logfile"]
+	li4 =[]
+	for line in execute(command_line):
+		if line != "":  #not empty then store it
+			item, count = line.split('\t')
+			li4.append((item,int(count)))
+
+
+	li = sorted(li,key=itemgetter(1), reverse=True)
+	li2 = sorted(li2,key=itemgetter(1), reverse=True)
+	li3 = sorted(li3,key=itemgetter(1), reverse=True)
+	li4 = sorted(li4,key=itemgetter(1), reverse=True)
+
+
 	return flask.render_template(
         'analyze.html',
-	li = li,
-	delmsg = "" )
+	li = li,li2 = li2,li3=li3,li4=li4,
+	delmsg = "Results" )
 
 if __name__ == "__main__":
     app.run(port=int(environ['FLASK_PORT']))
